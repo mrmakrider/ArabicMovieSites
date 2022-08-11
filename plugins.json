@@ -1,0 +1,42 @@
+[
+    {
+        "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2f/Korduene_Logo.png",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/mrmakrider/ArabicMovieSites",
+        "fileSize": 7311,
+        "status": 1,
+        "language": "en",
+        "authors": [
+            "Cloudburst",
+            "Luna712"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "ExampleProvider",
+        "description": "Lorem ipsum",
+        "url": "https://raw.githubusercontent.com/mrmakrider/ArabicMovieSites/builds/ExampleProvider.cs3",
+        "name": "ExampleProvider"
+    },
+    {
+        "iconUrl": "https://tuk.cam/favicon.ico",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/mrmakrider/ArabicMovieSites",
+        "status": 1,
+        "language": "ar",
+        "authors": [
+            "YourName"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie",
+            "Anime",
+            "AsianDrama"
+        ],
+        "version": -1,
+        "internalName": "TukTukCinemaProvider",
+        "url": "https://raw.githubusercontent.com/mrmakrider/ArabicMovieSites/builds/TukTukCinemaProvider.cs3",
+        "name": "TukTukCinemaProvider"
+    }
+]
