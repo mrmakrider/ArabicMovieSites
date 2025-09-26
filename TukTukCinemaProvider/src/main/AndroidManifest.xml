@@ -1,0 +1,7 @@
+<manifest package="com.tuktukcinema">
+    <application>
+        <meta-data
+            android:name="plugin_class"
+            android:value="com.tuktukcinema.TukTukCinemaProvider" />
+    </application>
+</manifest>
