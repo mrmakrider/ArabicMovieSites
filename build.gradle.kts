@@ -5,6 +5,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 buildscript {
     repositories {
+        // Official R8 releases include the Kotlin 2.4-compatible dexer.
+        maven("https://storage.googleapis.com/r8-releases/raw") {
+            content { includeModule("com.android.tools", "r8") }
+        }
         google()
         mavenCentral()
         // Shitpack repo which contains our tools and dependencies
@@ -13,9 +17,12 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
+        // D8/R8 must understand the Kotlin 2.4 metadata emitted below.
+        classpath("com.android.tools:r8:9.1.29")
         // Cloudstream gradle plugin which makes everything work and builds plugins
         classpath("com.github.recloudstream:gradle:-SNAPSHOT")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
+        // Match the Kotlin 2.4 metadata currently used by the Cloudstream toolchain/stubs.
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
     }
 }
 

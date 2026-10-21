@@ -40,9 +40,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+    // JVM 1.8 is configured centrally via Kotlin compilerOptions in the root build.
 }
 
 dependencies {

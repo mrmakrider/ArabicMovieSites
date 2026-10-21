@@ -2,6 +2,7 @@ package com.example
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -23,40 +24,40 @@ import com.lagradost.cloudstream3.utils.UIHelper.colorFromAttribute
  */
 class BlankFragment(private val plugin: ExamplePlugin) : BottomSheetDialogFragment() {
 
-    // Helper function to get a drawable resource by name
+    // Resolve against the plugin resources, not the host application's package.
     @SuppressLint("DiscouragedApi")
-    @Suppress("SameParameterValue")
+    private fun Resources.resourceId(name: String, type: String): Int? =
+        resolveResourceId(name, type) { resourceName, resourceType ->
+            getIdentifier(
+                resourceName, resourceType, BuildConfig.LIBRARY_PACKAGE_NAME
+            )
+        }
+
     private fun getDrawable(name: String): Drawable? {
-        val id = plugin.resources?.getIdentifier(name, "drawable", BuildConfig.LIBRARY_PACKAGE_NAME)
-        return id?.let { ResourcesCompat.getDrawable(plugin.resources ?: return null, it, null) }
+        val resources = plugin.resources ?: return null
+        val id = resources.resourceId(name, "drawable") ?: return null
+        return ResourcesCompat.getDrawable(resources, id, null)
     }
 
-    // Helper function to get a string resource by name
-    @SuppressLint("DiscouragedApi")
-    @Suppress("SameParameterValue")
     private fun getString(name: String): String? {
-        val id = plugin.resources?.getIdentifier(name, "string", BuildConfig.LIBRARY_PACKAGE_NAME)
-        return id?.let { plugin.resources?.getString(it) }
+        val resources = plugin.resources ?: return null
+        val id = resources.resourceId(name, "string") ?: return null
+        return resources.getString(id)
     }
 
-    // Generic findView function to find views by name
-    @SuppressLint("DiscouragedApi")
     private fun <T : View> View.findViewByName(name: String): T? {
-        val id = plugin.resources?.getIdentifier(name, "id", BuildConfig.LIBRARY_PACKAGE_NAME)
-        return findViewById(id ?: return null)
+        val id = plugin.resources?.resourceId(name, "id") ?: return null
+        return findViewById(id)
     }
 
-    @SuppressLint("DiscouragedApi")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val layoutId = plugin.resources?.getIdentifier("fragment_blank", "layout", BuildConfig.LIBRARY_PACKAGE_NAME)
-        return layoutId?.let {
-            inflater.inflate(plugin.resources?.getLayout(it), container, false)
-        }
+        val resources = plugin.resources ?: return null
+        val layoutId = resources.resourceId("fragment_blank", "layout") ?: return null
+        return inflater.inflate(resources.getLayout(layoutId), container, false)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
