@@ -23,6 +23,8 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
+      - name: Test publishing freshness guard
+        run: python3 -B -m unittest discover -s .github/tests -v
       - name: Run resource regression tests
         run: bash ./gradlew --no-daemon :ExampleProvider:testDebugUnitTest
       - name: Build all plugins without publishing
@@ -70,10 +72,22 @@ jobs:
       - name: Commit and push builds
         working-directory: builds
         run: |
+          set -euo pipefail
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add --all
           if ! git diff --staged --quiet; then
             git commit -m "Build $GITHUB_SHA"
+            # Validation can finish out of order. Check while holding the publish
+            # concurrency slot, immediately before the only remote write.
+            current_sha="$(git ls-remote --exit-code origin "$GITHUB_REF" | awk '{print $1}')"
+            if [[ ! "$current_sha" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "Could not establish the source branch tip; refusing publication." >&2
+              exit 1
+            fi
+            if [[ "$current_sha" != "$GITHUB_SHA" ]]; then
+              echo "Skipping superseded build $GITHUB_SHA (current tip: $current_sha)."
+              exit 0
+            fi
             git push origin HEAD:builds
           fi
